@@ -1,21 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import { signInWithPopup } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, provider } from "../app/lib/firebase";
 import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
 
 const Login = () => {
   const [user, setUser] = useState(null);
+ 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
 
+    return () => unsubscribe();
+  }, []);
+ 
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       setUser(result.user);
-      console.log(result.user);
     } catch (error) {
       console.error("Error during sign in:", error);
+    }
+  };
+ 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Error during sign out:", error);
     }
   };
 
@@ -45,6 +61,13 @@ const Login = () => {
           />
           <h2 className="text-2xl text-gray-800 font-bold">{user.displayName}</h2>
           <p className="text-sm text-gray-600 mt-1">{user.email}</p>
+
+          <button
+            onClick={handleLogout}
+            className="mt-4 bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-full shadow-md transition"
+          >
+            Logout
+          </button>
         </motion.div>
       )}
     </div>
