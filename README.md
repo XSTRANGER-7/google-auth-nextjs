@@ -23,3 +23,16 @@ A beautiful and simple Google Sign-In and Logout system built using:
 ```bash
 git clone https://github.com/your-username/firebase-google-auth.git
 cd firebase-google-auth
+
+```
+### 2. Install Packages
+
+```bash
+npm i
+```
+
+### 3. Run the code
+
+```bash
+npm run dev
+```
